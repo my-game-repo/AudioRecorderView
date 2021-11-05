@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="slide_to_cancel">برای لغو به راست بکشید</string>
+    <string name="cancel">انصراف</string>
+    <string name="hold_to_record_audio">برای ضبط نگه دارید، برای ارسال رها کنید</string>
+</resources>

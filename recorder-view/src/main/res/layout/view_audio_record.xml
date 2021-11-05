@@ -28,7 +28,7 @@
             android:layout_height="194dp"
             android:visibility="gone"
             android:layout_gravity="end|bottom"
-            android:translationX="36dp"/>
+            android:translationX="@dimen/record_circle_translate_x"/>
 
     <TextView
             android:id="@+id/record_tip_tv"

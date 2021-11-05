@@ -202,12 +202,19 @@ class AudioRecordView : FrameLayout {
 
     private fun cleanUp() {
         startX = 0f
-        originX = 0f
+        originX = if (layoutDirection == LAYOUT_DIRECTION_LTR) 0f else measuredWidth.toFloat()
         isRecording = false
     }
 
-    private fun handleCancelOrEnd(cancel: Boolean) {
-        if (cancel) callback.onRecordCancel() else callback.onRecordEnd()
+    private fun handleCancelOrEnd(cancel: Boolean, locked: Boolean = false) {
+        if (cancel) {
+            if (locked)
+                callback.onLockEnd()
+            else
+                callback.onRecordCancel()
+        } else {
+            callback.onRecordEnd()
+        }
         if (vibrationEnable) {
             context.vibrate(longArrayOf(0, 10))
         }
@@ -312,9 +319,9 @@ class AudioRecordView : FrameLayout {
                 }
 
                 val moveX = event.rawX
-                if (moveX != 0f) {
-                    binding.slidePanel.slideText(startX - moveX)
-                    if (originX - moveX > maxScrollX) {
+                if (moveX != 0f && isRecording) {
+                    binding.slidePanel.slideText((startX - moveX) * direction())
+                    if ((originX - moveX) * direction() > maxScrollX) {
                         removeCallbacks(recordRunnable)
                         removeCallbacks(checkReadyRunnable)
                         handleCancelOrEnd(true)
@@ -431,12 +438,16 @@ class AudioRecordView : FrameLayout {
 
     private val recordCircleCallback = object : RecordCircleView.Callback {
         override fun onSend() {
-            handleCancelOrEnd(false)
+            handleCancelOrEnd(cancel = false, locked = true)
         }
 
         override fun onCancel() {
-            handleCancelOrEnd(true)
+            handleCancelOrEnd(cancel = true, locked = true)
         }
+    }
+
+    private fun direction(): Int {
+        return if (layoutDirection == LAYOUT_DIRECTION_LTR) 1 else -1
     }
 
     interface Callback {
@@ -444,5 +455,6 @@ class AudioRecordView : FrameLayout {
         fun isReady(): Boolean
         fun onRecordEnd()
         fun onRecordCancel()
+        fun onLockEnd()
     }
 }

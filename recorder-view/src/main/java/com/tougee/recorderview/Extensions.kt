@@ -35,9 +35,9 @@ fun Context.vibrate(pattern: LongArray) {
     }
 }
 
-fun Long.formatMillis(): String {
+fun Long.formatMillis(locale : Locale = Locale.getDefault()): String {
     val formatBuilder = StringBuilder()
-    val formatter = Formatter(formatBuilder, Locale.getDefault())
+    val formatter = Formatter(formatBuilder, locale)
     getStringForTime(formatBuilder, formatter, this)
     return formatBuilder.toString()
 }

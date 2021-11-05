@@ -5,4 +5,5 @@
     <dimen name="blink_size">8dp</dimen>
     <dimen name="padding8">8dp</dimen>
     <dimen name="chat_control_height">52dp</dimen>
+    <dimen name="record_circle_translate_x">36dp</dimen>
 </resources>

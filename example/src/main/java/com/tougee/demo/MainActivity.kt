@@ -2,7 +2,9 @@ package com.tougee.demo
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.os.ParcelFileDescriptor
@@ -107,6 +109,11 @@ class MainActivity : AppCompatActivity(), AudioRecordView.Callback {
         audioRecord?.stop()
     }
 
+    override fun onLockEnd() {
+        toast("onLockCancel")
+        audioRecord?.stop()
+    }
+
     private fun clearFile(f: File) {
         PrintWriter(f).run {
             print("")
@@ -140,5 +147,21 @@ class MainActivity : AppCompatActivity(), AudioRecordView.Callback {
                     "Application will not have audio on record", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    override fun attachBaseContext(newBase: Context?) {
+        var newBase = newBase
+        newBase = LanguageAwareContext.newLanguageAwareContext("fa", newBase)
+        super.attachBaseContext(newBase)
+    }
+
+    //FIXED androidx problem with rtl on android 5 and 6
+    override fun applyOverrideConfiguration(overrideConfiguration: Configuration?) {
+        if (overrideConfiguration != null) {
+            val uiMode = overrideConfiguration.uiMode
+            overrideConfiguration.setTo(baseContext.resources.configuration)
+            overrideConfiguration.uiMode = uiMode
+        }
+        super.applyOverrideConfiguration(overrideConfiguration)
     }
 }
